@@ -1,29 +1,20 @@
 
-import { useState } from "react";
-
-export default function Todo({title,content,author, createDate}){
-    const curDate=new Date(Date.now());
-    const completeDate=curDate.toString();
-    const[isComplete,setisComplete] = useState(false)
-    function handleIsComplete(evt){
-        setisComplete(evt.target.checked);
-    }
-    
+export default function Todo(props){
     return (
         <div>
-            <h3>{title}</h3>
-            <div>{content}</div>
+            <h3>{props.todo.title}</h3>
+            <div>{props.todo.content}</div>
             <br />
-            <i> Written by <b> {author} </b></i>
+            <i> Written by <b> {props.todo.author} </b></i>
             <br />
-            <i> Create Date: {createDate} </i>
+            <i> Create Date: {props.todo.createDate} </i>
             <br />
-            <i> To-Do status: <input type="checkbox" value="Complete" checked={isComplete} onChange={handleIsComplete} /> 
-            {isComplete ? 'Completed' : 'Incomplete'} </i>
+            <i> To-Do status: <input type="checkbox" value="Complete" checked={props.todo.isComplete} onChange={()=>props.handleClickComplete(props.todo.uuid)} /> 
+            {props.todo.isComplete ? 'Completed' : 'Incomplete'} </i>
             <br />
-            <i> Completed Date: {isComplete ? completeDate : null} </i>
+            <i> Completed Date: {props.todo.completeDate} </i>
             <br />
-
         </div>
     )
 }
+
