@@ -1,12 +1,15 @@
 import Todo from "./Todo";
 
 export default function Todolist(props) {
-    
-    return (
-        <div>
-            {props.todos.map((p,i)=> (
-                <Todo todo={p} key={p.uuid} handleClickComplete={props.handleClickComplete} />
-                ))}
-        </div>
-    )
+  return (
+    <div>
+      {props.todos.map((p, i) => (
+        <Todo
+          todo={p}
+          key={p.uuid}
+          handleClickComplete={props.handleClickComplete}
+        />
+      ))}
+    </div>
+  );
 }

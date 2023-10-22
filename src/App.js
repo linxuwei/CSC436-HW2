@@ -1,46 +1,100 @@
-
 import CreateTodo from "./CreateTodo";
 import Todolist from "./Todolist";
-import UserBar from "./UserBar"; 
-import { useState } from "react";
+import UserBar from "./UserBar";
+import { useEffect, useReducer, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Header from "./Header";
+import { ThemeContext } from "./contexts";
+import ChangeTheme from "./ChangeTheme";
+import { StateContext } from "./contexts";
+import appReducer from "./reducer";
 
 function App() {
-  const [user,setUser] = useState('')
-  const nowDate=new Date(Date.now());
-  
-  const initalTodo=[
-    {title:"React Example", content:"The greatst thing since slice", author:"Steve Jackson", createDate:nowDate.toString(), 
-  isComplete: false, completeDate:null, uuid:uuidv4()},
-    {title:"UseState Example", content:"This is thest 2 and you", author:"Paul Duszak", createDate:nowDate.toString(),
-    isComplete: false, completeDate:null,uuid:uuidv4()},
-    {title:"JavaScript Example", content:"Whos the greates guys in the workd", author:"Xuwel Lin", createDate:nowDate.toString(),
-    isComplete: false, completeDate:null,uuid:uuidv4()},
+  const nowDate = new Date(Date.now());
+  const initalTodo = [
+    {
+      title: "React Example",
+      content: "The greatst thing since slice",
+      author: "Steve Jackson",
+      createDate: nowDate.toString(),
+      isComplete: false,
+      completeDate: null,
+      uuid: uuidv4(),
+    },
+    {
+      title: "UseState Example",
+      content: "This is thest 2 and you",
+      author: "Paul Duszak",
+      createDate: nowDate.toString(),
+      isComplete: false,
+      completeDate: null,
+      uuid: uuidv4(),
+    },
+    {
+      title: "JavaScript Example",
+      content: "Whos the greates guys in the workd",
+      author: "Xuwel Lin",
+      createDate: nowDate.toString(),
+      isComplete: false,
+      completeDate: null,
+      uuid: uuidv4(),
+    },
   ];
 
-  const [todos,setTodos] = useState(initalTodo);
-  const handleAddTodo = (newTodo)=>{ setTodos([newTodo, ...todos]);
+  const [state, dispatch] = useReducer(appReducer, {
+    user: "",
+    todos: initalTodo,
+  });
+
+  const { user, todos } = state;
+
+  const [theme, setTheme] = useState({
+    primaryColor: "deepskyblue",
+    secondaryColor: "coral",
+  });
+
+  const handleAddTodo = (newTodo) => {
+    dispatch({ type: "CREATE_TODO", ...newTodo });
   };
-  
-  const handleClickComplete= (uuid) => {
-    const nowDate=new Date(Date.now());
-    const newTodos=todos.map(todo => {
-      if(todo.uuid === uuid){
-        return {...todo, isComplete:!todo.isComplete,completeDate:todo.isComplete ? null:nowDate.toString()};
-      }else{
-        return todo;
-      }
-    });
-    setTodos(newTodos);
-   };
+
+  useEffect(() => {
+    if (user) {
+      document.title = `${user}'s Blog`;
+    } else {
+      document.title = "Blog";
+    }
+  }, [user]);
+
+  const handleClickComplete = (uuid) => {
+    // const nowDate = new Date(Date.now());
+    // const newTodos = todos.map((todo) => {
+    //   if (todo.uuid === uuid) {
+    //     return {
+    //       ...todo,
+    //       isComplete: !todo.isComplete,
+    //       completeDate: todo.isComplete ? null : nowDate.toString(),
+    //     };
+    //   } else {
+    //     return todo;
+    //   }
+    // });
+    //setTodos(newTodos);
+    dispatch({type:"UPDATE_TODO", uuid});
+  };
 
   return (
     <div>
-      <UserBar user={user} setUser={setUser} /> 
-      <CreateTodo user={user} handleAddTodo={handleAddTodo} />
-      <Todolist todos={todos} handleClickComplete={handleClickComplete} />
+      <StateContext.Provider value={{ state: state, dispatch: dispatch }}>
+        <ThemeContext.Provider value={theme}>
+          <Header text="My Blog" />
+          <ChangeTheme theme={theme} setTheme={setTheme} />
+          <UserBar />
+          <CreateTodo user={user} handleAddTodo={handleAddTodo} />
+          <Todolist todos={todos} handleClickComplete={handleClickComplete} />
+        </ThemeContext.Provider>
+      </StateContext.Provider>
     </div>
-  )
+  );
 }
 
 export default App;
