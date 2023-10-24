@@ -47,6 +47,7 @@ function App() {
   });
 
   const { user, todos } = state;
+  const { username, loggedIn } = user;
 
   const [theme, setTheme] = useState({
     primaryColor: "deepskyblue",
@@ -66,31 +67,24 @@ function App() {
   }, [user]);
 
   const handleClickComplete = (uuid) => {
-    // const nowDate = new Date(Date.now());
-    // const newTodos = todos.map((todo) => {
-    //   if (todo.uuid === uuid) {
-    //     return {
-    //       ...todo,
-    //       isComplete: !todo.isComplete,
-    //       completeDate: todo.isComplete ? null : nowDate.toString(),
-    //     };
-    //   } else {
-    //     return todo;
-    //   }
-    // });
-    //setTodos(newTodos);
-    dispatch({type:"UPDATE_TODO", uuid});
+    dispatch({ type: "TOGGLE_TODO", uuid });
   };
+
+  const handleDelete = (uuid) => {
+    dispatch({type: "DELETE_TODO", uuid});
+  }
 
   return (
     <div>
-      <StateContext.Provider value={{ state: state, dispatch: dispatch }}>
+      <StateContext.Provider value={{ state, dispatch }}>
         <ThemeContext.Provider value={theme}>
-          <Header text="My Blog" />
+          <Header text="My Blog" />　
           <ChangeTheme theme={theme} setTheme={setTheme} />
           <UserBar />
-          <CreateTodo user={user} handleAddTodo={handleAddTodo} />
-          <Todolist todos={todos} handleClickComplete={handleClickComplete} />
+          {loggedIn && (
+            <CreateTodo user={username} handleAddTodo={handleAddTodo} />
+          )}
+          <Todolist todos={todos} handleClickComplete={handleClickComplete} handleDelete={handleDelete} />
         </ThemeContext.Provider>
       </StateContext.Provider>
     </div>

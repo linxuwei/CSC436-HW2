@@ -8,6 +8,7 @@ export default function Todolist(props) {
           todo={p}
           key={p.uuid}
           handleClickComplete={props.handleClickComplete}
+          handleDelete={props.handleDelete}
         />
       ))}
     </div>

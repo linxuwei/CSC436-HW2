@@ -3,6 +3,9 @@ import { ThemeContext } from "./contexts";
 
 export default function Todo(props) {
   const { secondaryColor } = useContext(ThemeContext);
+  const handleDelete = () => {
+    props.handleDelete(props.todo.uuid);
+  };
 
   return (
     <div>
@@ -29,6 +32,8 @@ export default function Todo(props) {
       </i>
       <br />
       <i> Completed Date: {props.todo.completeDate} </i>
+      <br />
+      <button onClick={handleDelete}> Delete </button>
       <br />
     </div>
   );
