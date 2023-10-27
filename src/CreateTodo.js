@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export default function CreateTodo({ user, handleAddTodo }) {
+export default function CreateTodo({ username, handleAddTodo }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -17,7 +17,7 @@ export default function CreateTodo({ user, handleAddTodo }) {
     const newTodo = {
       title,
       content,
-      author: user,
+      author: username,
       createDate: nowDate.toString(),
       isComplete: false,
       completeDate: null,
@@ -35,7 +35,7 @@ export default function CreateTodo({ user, handleAddTodo }) {
     >
       <div>
         {" "}
-        Author: <b>{user}</b>
+        Author: <b>{username}</b>
       </div>
       <div>
         <label htmlFor="create-title">Title:</label>

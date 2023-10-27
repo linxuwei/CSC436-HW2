@@ -3,10 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 function userReducer(state, action) {
   switch (action.type) {
     case "LOGIN":
+      return { username: action.username, loggedIn: true };
     case "REGISTER":
-      return action.username;
+      return { username: action.username, loggedIn: true };
     case "LOGOUT":
-      return "";
+      return { username: "", loggedIn: false };
     default:
       return state;
   }
@@ -26,17 +27,19 @@ function todoReduer(state, action) {
         uuid: uuidv4(),
       };
       return [newTodo, ...state];
-    case "UPDATE_TODO":
-        return state.map((todo) => {
-            if(todo.uuid === action.uuid){
-                return {
-                    ...todo,
-                    isComplete:!todo.isComplete,
-                    completeDate:todo.isComplete ? null:nowDate.toString(),
-                };
-            }
-            return todo;
-        })
+    case "TOGGLE_TODO":
+      return state.map((todo) => {
+        if (todo.uuid === action.uuid) {
+          return {
+            ...todo,
+            isComplete: !todo.isComplete,
+            completeDate: todo.isComplete ? null : nowDate.toString(),
+          };
+        }
+        return todo;
+      });
+    case "DELETE_TODO":
+      return state.filter((todo) => todo.uuid !== action.uuid);
     default:
       return state;
   }
