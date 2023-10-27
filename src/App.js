@@ -45,7 +45,6 @@ function App() {
     user: "",
     todos: initalTodo,
   });
-
   const { user, todos } = state;
   const { username, loggedIn } = user;
 
@@ -58,15 +57,6 @@ function App() {
     dispatch({ type: "CREATE_TODO", ...newTodo });
   };
 
-  useEffect(() => {
-    if (user) {
-      document.title = `${user}'s Blog`;
-    } else {
-      document.title = "Blog";
-    }
-  }, [user]);
-
-
   const handleClickComplete = (uuid) => {
     dispatch({type:"TOGGLE_TODO", uuid});
   };
@@ -75,17 +65,21 @@ function App() {
     dispatch({type:"DELETE_TODO", uuid});
   }
 
+  useEffect(() => {
+    if (user) {
+      document.title = `${user}'s Blog`;
+    } else {
+      document.title = "Blog";
+    }
+  }, [user]);
+  //console.log("loggedIn:", loggedIn);
   return (
     <div>
       <StateContext.Provider value={{ state, dispatch }}>
         <ThemeContext.Provider value={theme}>
-          <Header text="My Blog" />　
+          <Header text="My Blog" />
           <ChangeTheme theme={theme} setTheme={setTheme} />
           <UserBar />
-          {loggedIn && (
-            <CreateTodo user={username} handleAddTodo={handleAddTodo} />
-          )}
-          <Todolist todos={todos} handleClickComplete={handleClickComplete} handleDelete={handleDelete} />
           {loggedIn && (
             <CreateTodo user={username} handleAddTodo={handleAddTodo} />
           )}
