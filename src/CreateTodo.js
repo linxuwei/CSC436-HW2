@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function CreateTodo({ username, handleAddTodo }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+//   const {username} = user;
 
   function handleTitle(evt) {
     setTitle(evt.target.value);

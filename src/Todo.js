@@ -3,6 +3,9 @@ import { ThemeContext } from "./contexts";
 
 export default function Todo(props) {
   const { secondaryColor } = useContext(ThemeContext);
+  const handleDelete = () => {
+    props.handleDelete(props.todo.uuid);
+  };
 
   const handleDelete =() =>{
     props.handleDelete(props.todo.uuid);
