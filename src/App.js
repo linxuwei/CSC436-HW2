@@ -48,7 +48,6 @@ function App() {
 
   const { user, todos } = state;
   const { username, loggedIn } = user;
-  const { username, loggedIn } = user;
 
   const [theme, setTheme] = useState({
     primaryColor: "deepskyblue",
@@ -79,9 +78,7 @@ function App() {
   return (
     <div>
       <StateContext.Provider value={{ state, dispatch }}>
-      <StateContext.Provider value={{ state, dispatch }}>
         <ThemeContext.Provider value={theme}>
-          <Header text="My Blog" />　
           <Header text="My Blog" />　
           <ChangeTheme theme={theme} setTheme={setTheme} />
           <UserBar />
