@@ -7,11 +7,11 @@ import { StateContext } from "./contexts";
 export default function UserBar() {
   const { state, dispatch: dispatchUser } = useContext(StateContext);
   const { user } = state;
-  console.log("user:", user);
+  //console.log("user:", user);
   if (user.loggedIn) {
     return (
       <>
-        <Logout user={user} dispatchUser={dispatchUser} />;
+        <Logout user={user} dispatchUser={dispatchUser} />
       </>
     );
   } else {
