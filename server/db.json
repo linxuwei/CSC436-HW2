@@ -1,43 +1,23 @@
 {
   "todos": [
     {
-      "title": "React Example",
-      "content": "The greatst thing since slice",
+      "title": "This is Initial TO-DO (Can not be delete)",
+      "content": "The CreateNewToDo/Delete/toggle feature will be only working once user logging to their account",
       "author": "Steve Jackson",
       "createDate": "2023-11-01T10:00:00Z",
       "isComplete": false,
       "completeDate": null,
       "uuid": "1"
-    },
-    {
-      "title": "UseState Example",
-      "content": "This is thest 2 and you",
-      "author": "Paul Duszak",
-      "createDate": "2023-11-02T10:00:00Z",
-      "isComplete": false,
-      "completeDate": null,
-      "uuid": "2",
-      "id": 2
-    },
-    {
-      "title": "JavaScript Example",
-      "content": "Whos the greates guys in the workd",
-      "author": "Xuwel Lin",
-      "createDate": "2023-11-04T10:00:00Z",
-      "isComplete": false,
-      "completeDate": null,
-      "uuid": "3",
-      "id": 3
     }
   ],
   "users": [
     {
-      "email": "xlin19@depaul.edu",
+      "email": "guest@depaul.edu",
       "password": "$2a$10$If7koddCflsP5qVnvShjTe3eDS9s.KJG0IUJrFKuJ74J6FLhdnP8W",
       "id": 1
     },
     {
-      "email": "linxuwei@gmail.com",
+      "email": "admin@depaul.edu",
       "password": "$2a$10$pNIQbUsLvb4KRvDLB8dnr.Kyz2wvhfRsdnGlsn1rT3bt2JWXsduAW",
       "id": 2
     }

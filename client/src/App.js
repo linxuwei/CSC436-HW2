@@ -2,73 +2,39 @@ import CreateTodo from "./CreateTodo";
 import Todolist from "./Todolist";
 import UserBar from "./UserBar";
 import { useEffect, useReducer, useState } from "react";
-// import { v4 as uuidv4 } from "uuid";
 import Header from "./Header";
 import { ThemeContext } from "./contexts";
 import ChangeTheme from "./ChangeTheme";
 import { StateContext } from "./contexts";
 import appReducer from "./reducer";
+import { useResource } from "react-request-hook";
 
 function App() {
-  // const nowDate = new Date(Date.now());
-  // const initalTodo = [
-  //   {
-  //     title: "React Example",
-  //     content: "The greatst thing since slice",
-  //     author: "Steve Jackson",
-  //     createDate: nowDate.toString(),
-  //     isComplete: false,
-  //     completeDate: null,
-  //     uuid: uuidv4(),
-  //   },
-  //   {
-  //     title: "UseState Example",
-  //     content: "This is thest 2 and you",
-  //     author: "Paul Duszak",
-  //     createDate: nowDate.toString(),
-  //     isComplete: false,
-  //     completeDate: null,
-  //     uuid: uuidv4(),
-  //   },
-  //   {
-  //     title: "JavaScript Example",
-  //     content: "Whos the greates guys in the workd",
-  //     author: "Xuwel Lin",
-  //     createDate: nowDate.toString(),
-  //     isComplete: false,
-  //     completeDate: null,
-  //     uuid: uuidv4(),
-  //   },
-  // ];
+  const [todosResponse, getTodos] = useResource(() => ({
+    url:'/todos',
+    method:'get'
+  }));
+
+
+  useEffect(getTodos,[]);
   useEffect(() => {
-    fetch('/api/todos')
-    .then(result => result.json())
-    .then(todos => dispatch({ type: 'FETCH_TODOS', todos }))
-    }, []);
+    if(todosResponse && todosResponse.data){
+      dispatch({type:'FETCH_TODOS',todos:todosResponse.data.reverse()})
+    }
+  },[todosResponse]);
 
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
     todos: [],
   });
+
   const { user, todos } = state;
-  const { username, loggedIn } = user;
 
   const [theme, setTheme] = useState({
-    primaryColor: "deepskyblue",
-    secondaryColor: "coral",
+    primaryColor: "orange",
+    secondaryColor: "purple",
   });
 
-  const handleAddTodo = (newTodo) => {
-    dispatch({ type: "CREATE_TODO", ...newTodo });
-  };
-
-  const handleClickComplete = (uuid) => {
-    dispatch({type:"TOGGLE_TODO", uuid});
-  };
-
-  const handleDelete = (uuid) =>{
-    dispatch({type:"DELETE_TODO", uuid});
-  }
 
   useEffect(() => {
     if (user) {
@@ -85,10 +51,8 @@ function App() {
           <Header text="My Blog" />
           <ChangeTheme theme={theme} setTheme={setTheme} />
           <UserBar />
-          {loggedIn && (
-            <CreateTodo user={username} handleAddTodo={handleAddTodo} />
-          )}
-          <Todolist todos={todos} handleClickComplete={handleClickComplete} handleDelete={handleDelete} />
+          <CreateTodo />
+          <Todolist todos={todos} />
         </ThemeContext.Provider>
       </StateContext.Provider>
     </div>

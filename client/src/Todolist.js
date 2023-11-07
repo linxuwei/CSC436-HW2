@@ -1,14 +1,11 @@
 import Todo from "./Todo";
+import { v4 as uuid4} from "uuid";
 
-export default function Todolist(props) {
+export default function Todolist({ todos=[]}) {
   return (
     <div>
-      {props.todos.map((p, i) => (
-        <Todo
-          todo={p}
-          key={p.uuid}
-          handleClickComplete={props.handleClickComplete}
-          handleDelete={props.handleDelete}
+      {todos.map((p, i) => (
+        <Todo {...p} key={uuid4()}
         />
       ))}
     </div>
