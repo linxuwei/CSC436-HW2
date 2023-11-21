@@ -11,7 +11,7 @@ export default function UserBar() {
   if (user) {
     return (
       <>
-        <Logout user={user} dispatchUser={dispatchUser} />
+        <Logout user={user.username} dispatchUser={dispatchUser} />
       </>
     );
   } else {

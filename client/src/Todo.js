@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StateContext, ThemeContext } from "./contexts";
 import { useResource } from "react-request-hook";
 
@@ -9,20 +9,30 @@ export default function Todo({
   createDate,
   isComplete,
   completeDate,
-  id,
+  _id,
 }) {
   const { secondaryColor } = useContext(ThemeContext);
-  const { state, dispatch } = useContext(StateContext);
+  const { state, dispatch: dispatchTodo } = useContext(StateContext);
   const { user } = state;
-  const [dTodo, deleteTodo] = useResource((id) => ({
-    url: "/todos/" + id,
+  const [dTodo, deleteTodo] = useResource(() => ({
+    url: "/todo/" + _id,
     method: "delete",
+    headers: { Authorization: `${state.user.access_token}` },
   }));
 
   const [tTodo, toggleTodo] = useResource(
-    ({ title, content, author, createDate, isComplete, completeDate, id }) => ({
-      url: "/todos/" + id,
+    ({
+      title,
+      content,
+      author,
+      createDate,
+      isComplete,
+      completeDate,
+      _id,
+    }) => ({
+      url: "/todo/" + _id,
       method: "put",
+      headers: { Authorization: `${state.user.access_token}` },
       data: {
         title,
         content,
@@ -30,18 +40,18 @@ export default function Todo({
         createDate,
         isComplete,
         completeDate,
-        id,
+        _id,
       },
     })
   );
 
-  const handleDelete = () => {
-    deleteTodo(id);
-    dispatch({ type: "DELETE_TODO", id });
+  const handleDelete = (_id) => {
+    deleteTodo(_id);
+    dispatchTodo({ type: "DELETE_TODO", _id });
   };
 
   const nowDate = new Date(Date.now());
-  const handleClickComplete = () => {
+  const handleClickComplete = async (_id) => {
     toggleTodo({
       title,
       content,
@@ -49,10 +59,24 @@ export default function Todo({
       createDate,
       isComplete: !isComplete,
       completeDate: isComplete ? null : nowDate.toString(),
-      id,
+      _id,
     });
-    dispatch({ type: "TOGGLE_TODO", id });
   };
+
+  useEffect(() => {
+    if (tTodo && tTodo.isLoading === false && tTodo.data) {
+      dispatchTodo({
+        type: "TOGGLE_TODO",
+        _id,
+      });
+    }
+  }, [tTodo.data]);
+
+  useEffect(() => {
+    if (dTodo && dTodo.isLoading === false && dTodo.data) {
+      dispatchTodo({ type: "DELETE_TODO", _id, });
+    }
+  }, [dTodo.data]);
 
   return (
     <div>
@@ -61,7 +85,7 @@ export default function Todo({
       <br />
       <i>
         {" "}
-        Written by <b> {author} </b>
+        Written by <b> {user.username} </b>
       </i>
       <br />
       <i> Create Date: {createDate} </i>
@@ -74,7 +98,7 @@ export default function Todo({
             type="checkbox"
             value="Complete"
             checked={isComplete}
-            onChange={() => handleClickComplete(id)}
+            onChange={() => handleClickComplete(_id)}
           />
         )}
         {isComplete ? "Completed" : "Incomplete"}{" "}

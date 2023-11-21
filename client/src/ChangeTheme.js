@@ -3,18 +3,9 @@ import ThemeItem from "./ThemeItem";
 import { useEffect } from "react";
 import { useResource } from "react-request-hook";
 
-// const THEMES = [
-//   { primaryColor: "deepskyblue", secondaryColor: "coral" },
-//   { primaryColor: "orchid", secondaryColor: "mediumseagreen" },
-// ];
 
 export default function ChangeTheme({ theme, setTheme }) {
-  // const [themes, setThemes] = useState([]);
-  // useEffect(() => {
-  //   fetch("/api/themes")
-  //     .then((result) => result.json())
-  //     .then((themes) => setThemes(themes));
-  // }, []);
+
 
   const [themes, getThemes] = useResource(() => ({
     url: "/themes",
@@ -23,7 +14,6 @@ export default function ChangeTheme({ theme, setTheme }) {
 
   const { data, isLoading } = themes;
 
-  //originally will be (getThemes,[]);
   useEffect(getThemes, [getThemes]);
 
 

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { StateContext } from "./contexts";
 
 export default function Logout() {
-  const { state, dispatch: dispatchUser } = useContext(StateContext);
+  const { state, dispatch: dispatchUser } = useContext(StateContext); 
   const { user } = state;
 
   return (
@@ -13,7 +13,7 @@ export default function Logout() {
         dispatchUser({type:"LOGOUT"});
       }}
     >
-      Logged in as: <b>{user}</b>
+      Logged in as: <b>{user.username}</b>
       <input type="submit" value="Logout" />
     </form>
   );

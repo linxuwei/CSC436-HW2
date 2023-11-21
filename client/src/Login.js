@@ -3,28 +3,31 @@ import { useResource } from "react-request-hook";
 import { StateContext } from "./contexts";
 
 export default function Login() {
-
-  const {dispatch:dispatchUser} = useContext(StateContext);
+  const { dispatch: dispatchUser } = useContext(StateContext);
   const [username, setUsername] = useState("");
   const [loginFailed, setLoginFailed] = useState(false);
   const [password, setPassword] = useState("");
 
   const [user, login] = useResource((username, password) => ({
-    url: "/login",
+    url: "/auth/login",
     method: "post",
-    data: { email: username, password },
+    data: { username, password },
   }));
 
   useEffect(() => {
-    if (user) {
-      if (user?.data?.user) {
-        setLoginFailed(false);
-        dispatchUser({ type: "LOGIN", username: user.data.user.email });
-      } else {
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if (user.error) {
         setLoginFailed(true);
+      } else {
+        setLoginFailed(false);
+        dispatchUser({
+          type: "LOGIN",
+          username: username,
+          access_token: user.data.access_token,
+        });
       }
     }
-  }, [user,dispatchUser]);
+  }, [user, dispatchUser]);
 
   function handlePassword(evt) {
     setPassword(evt.target.value);
@@ -37,7 +40,10 @@ export default function Login() {
   return (
     <>
       {loginFailed && (
-        <span style={{ color: "red" }}> Please Login/Register to use CRUD functionality</span>
+        <span style={{ color: "red" }}>
+          {" "}
+          Please Login/Register to use CRUD functionality
+        </span>
       )}
       <form
         onSubmit={(e) => {

@@ -10,19 +10,6 @@ import appReducer from "./reducer";
 import { useResource } from "react-request-hook";
 
 function App() {
-  const [todosResponse, getTodos] = useResource(() => ({
-    url:'/todos',
-    method:'get'
-  }));
-
-
-  useEffect(getTodos,[]);
-  useEffect(() => {
-    if(todosResponse && todosResponse.data){
-      dispatch({type:'FETCH_TODOS',todos:todosResponse.data.reverse()})
-    }
-  },[todosResponse]);
-
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
     todos: [],
@@ -35,10 +22,26 @@ function App() {
     secondaryColor: "purple",
   });
 
+  const [todosResponse, getTodos] = useResource(() => ({
+    url: "/todo",
+    method: "get",
+    headers: { Authorization: `${state?.user?.access_token}` },
+  }));
+
+  useEffect(() => {
+    getTodos();
+  }, [state?.user?.access_token]);
+
+  // useEffect(getTodos, []);
+  useEffect(() => {
+    if (todosResponse && todosResponse.isLoading === false && todosResponse.data) {
+      dispatch({ type: "FETCH_TODOS", todos: todosResponse.data.reverse() });
+    }
+  }, [todosResponse]);
 
   useEffect(() => {
     if (user) {
-      document.title = `${user}'s Blog`;
+      document.title = `${user.username}'s Blog`;
     } else {
       document.title = "Blog";
     }

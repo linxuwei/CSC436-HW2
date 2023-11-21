@@ -1,13 +1,11 @@
 import Todo from "./Todo";
-import { v4 as uuid4} from "uuid";
 
-export default function Todolist({ todos=[]}) {
+export default function Todolist({ todos = [] }) {
   return (
     <div>
-      {todos.map((p, i) => (
-        <Todo {...p} key={uuid4()}
-        />
-      ))}
+      {todos.length === 0 && <h2>No TO-DO found</h2>}
+      {todos.length > 0 &&
+        todos.map((p, i) => <Todo {...p} key={p._id || p.id} />)}
     </div>
   );
 }

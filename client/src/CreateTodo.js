@@ -1,7 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useState,useEffect } from "react";
 import { useResource } from "react-request-hook";
 import { v4 as uuidv4 } from "uuid";
 import { StateContext } from "./contexts";
+
 
 export default function CreateTodo() {
   const [title, setTitle] = useState("");
@@ -10,9 +11,10 @@ export default function CreateTodo() {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
   const [todo, createTodo] = useResource(
-    ({ title, content, author, createDate, isComplete, completeDate, id }) => ({
-      url: "/todos",
+    ({ title, content, author, createDate, isComplete, completeDate,id }) => ({
+      url: "/todo",
       method: "post",
+      headers: { Authorization: `${state.user.access_token}` },
       data: {
         title,
         content,
@@ -20,7 +22,7 @@ export default function CreateTodo() {
         createDate,
         isComplete,
         completeDate,
-        id,
+        id
       },
     })
   );
@@ -38,22 +40,38 @@ export default function CreateTodo() {
       const newTodo = {
         title,
         content,
-        author: user,
+        author: user.username,
         createDate: nowDate.toString(),
         isComplete: false,
         completeDate: null,
-        id: uuidv4(),
+        id:uuidv4()
       };
       createTodo(newTodo);
 
-      dispatch({
-        type: "CREATE_TODO",
-        ...newTodo,
-      });
+      // dispatch({
+      //   type: "CREATE_TODO",
+      //   ...newTodo,
+      // });
     } else {
       console.log("User is not login");
     }
   }
+
+
+  useEffect(() => {
+    if (todo.isLoading === false && todo.data) {
+      dispatch({
+        type: "CREATE_TODO",
+        title: todo.data.title,
+        content: todo.data.content,
+        id: todo.data._id,
+        author: user.username,
+        completeDate:todo.data.completeDate,
+        isComplete:todo.data.isComplete,
+        createDate:todo.data.createDate,
+      });
+    }
+  }, [todo.data]);
 
   return (
     <div>
@@ -66,7 +84,7 @@ export default function CreateTodo() {
         >
           <div>
             {" "}
-            Author: <b>{user}</b>
+            Author: <b>{user.username}</b>
           </div>
           <div>
             <label htmlFor="create-title">Title:</label>
