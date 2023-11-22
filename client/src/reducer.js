@@ -25,7 +25,7 @@ function todoReduer(state, action) {
         createDate: nowDate.toString(),
         isComplete: false,
         completeDate: null,
-        id: action._id,
+        _id: action._id,
       };
       return [newTodo, ...state];
     case "FETCH_TODOS":

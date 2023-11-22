@@ -27,15 +27,17 @@ function App() {
     method: "get",
     headers: { Authorization: `${state?.user?.access_token}` },
   }));
+  
 
   useEffect(() => {
     getTodos();
   }, [state?.user?.access_token]);
-
+  
   // useEffect(getTodos, []);
   useEffect(() => {
     if (todosResponse && todosResponse.isLoading === false && todosResponse.data) {
       dispatch({ type: "FETCH_TODOS", todos: todosResponse.data.reverse() });
+      console.log("DEBUG line 41",todosResponse.data.reverse());
     }
   }, [todosResponse]);
 

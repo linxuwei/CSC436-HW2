@@ -11,7 +11,7 @@ export default function CreateTodo() {
   const { state, dispatch } = useContext(StateContext);
   const { user } = state;
   const [todo, createTodo] = useResource(
-    ({ title, content, author, createDate, isComplete, completeDate,id }) => ({
+    ({ title, content, author, createDate, isComplete, completeDate,_id }) => ({
       url: "/todo",
       method: "post",
       headers: { Authorization: `${state.user.access_token}` },
@@ -22,9 +22,11 @@ export default function CreateTodo() {
         createDate,
         isComplete,
         completeDate,
-        id
+        _id,
       },
+      
     })
+
   );
 
   function handleTitle(evt) {
@@ -44,10 +46,10 @@ export default function CreateTodo() {
         createDate: nowDate.toString(),
         isComplete: false,
         completeDate: null,
-        id:uuidv4()
+        _id:uuidv4(),
       };
       createTodo(newTodo);
-
+      console.log("L52 - ID from handleCreate():", todo._id);
       // dispatch({
       //   type: "CREATE_TODO",
       //   ...newTodo,
@@ -62,14 +64,16 @@ export default function CreateTodo() {
     if (todo.isLoading === false && todo.data) {
       dispatch({
         type: "CREATE_TODO",
-        title: todo.data.title,
-        content: todo.data.content,
-        id: todo.data._id,
-        author: user.username,
-        completeDate:todo.data.completeDate,
-        isComplete:todo.data.isComplete,
-        createDate:todo.data.createDate,
+        // title: todo.data.title,
+        // content: todo.data.content,
+        // _id: todo.data.id,
+        // author: user.username,
+        // completeDate:todo.data.completeDate,
+        // isComplete:todo.data.isComplete,
+        // createDate:todo.data.createDate,
+        ...todo.data
       });
+      console.log("L75 - TODO.Data",todo.data);
     }
   }, [todo.data]);
 
